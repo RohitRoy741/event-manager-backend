@@ -21,12 +21,13 @@ app.post('/events', (req, res) => {
         res.status(400).send(error);
     });
 });
-app.get('/events', (req,res) => {
-    Event.find({}).then((events) => {
+app.get('/events', async (req,res) => {
+    try {
+        const events = await Event.find({});
         res.send(events);
-    }).catch((error) => {
-        res.status(400).send(error);
-    })
+    } catch(e) {
+        res.status(400).send(e);
+    }
 });
 app.patch('/events/:id', async (req,res) => {
     const allowedUpdates = ['name', 'city', 'company', 'date'];
@@ -46,7 +47,7 @@ app.patch('/events/:id', async (req,res) => {
     }catch(e) {
         res.status(500).send();
     }
-})
+});
 app.listen(port, () => {
     console.log('Server is running on '+port);
 })
