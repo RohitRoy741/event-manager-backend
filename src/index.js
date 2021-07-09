@@ -11,15 +11,14 @@ app.use(cors());
 app.get('/', (req, res) => {
     res.send('Hello Event Manager');
 });
-app.post('/events', (req, res) => {
+app.post('/events', async (req, res) => {
     const event = new Event(req.body);
-    event.save().then(() => {
-        console.log(event);
+    try {
+        await event.save();
         res.send(event);
-    }).catch((error) => {
-        console.log(error);
+    } catch(e) {
         res.status(400).send(error);
-    });
+    }
 });
 app.get('/events', async (req,res) => {
     try {
