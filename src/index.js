@@ -47,6 +47,15 @@ app.patch('/events/:id', async (req,res) => {
         res.status(500).send();
     }
 });
+app.delete('/events/:id', async (req,res) => {
+    try {
+        const event = await Event.findOne({ _id: req.params.id });
+        await event.remove();
+        res.send(event);
+    } catch(e) {
+        res.status(500).send(e);
+    }
+});
 app.listen(port, () => {
     console.log('Server is running on '+port);
 })
