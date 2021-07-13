@@ -67,6 +67,15 @@ app.post('/users', async (req,res) => {
         res.status(400).send(e);
     }
 });
+app.post('/users/login', async(req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.username, req.body.password);
+        const token = await user.generateAuthToken();
+        res.send({ user, token });
+    } catch(e) {
+        res.status(400).send(e);
+    }
+})
 app.get('/users',async (req,res) => {
     try {
         const users = await User.find({});
@@ -74,7 +83,7 @@ app.get('/users',async (req,res) => {
     } catch(e) {
         res.status(400).send(e);
     }
-})
+});
 app.listen(port, () => {
     console.log('Server is running on '+port);
 })
