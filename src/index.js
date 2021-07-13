@@ -2,6 +2,7 @@ const express = require('express');
 require('./db/mongoose');
 const Event = require('./models/event');
 const User = require('./models/user');
+const auth = require('./middleware/auth');
 
 const app = express();
 const cors = require('cors');
@@ -84,6 +85,29 @@ app.get('/users',async (req,res) => {
         res.status(400).send(e);
     }
 });
+app.get('/users/me', auth, async (req, res) => {
+    res.send(req.user);
+});
+app.post('/users/logout', auth, async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token;
+        });
+        await req.user.save();
+        res.status(200).send();
+    } catch(e) {
+        res.status(500).send(e);
+    }
+});
+app.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = [];
+        await req.user.save();
+        res.status(200).send();
+    } catch(e) {
+        res.status(500).send(e);
+    }
+})
 app.listen(port, () => {
     console.log('Server is running on '+port);
 })

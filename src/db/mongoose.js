@@ -5,7 +5,9 @@ const uri = "mongodb+srv://Rohit:rohitroy@cluster0.stbre.mongodb.net/eventManage
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: true,
 }).then(() => {
     console.log('Database connected');
 }).catch((error) => {
