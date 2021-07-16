@@ -27,8 +27,8 @@ router.post('/users/login', async(req, res) => {
     }
 });
 
-//API to get all the data of all users
-router.get('/users',async (req,res) => {
+//API to get the data of all users
+router.get('/users', auth,async (req,res) => {
     try {
         const users = await User.find({});
         res.send(users);
