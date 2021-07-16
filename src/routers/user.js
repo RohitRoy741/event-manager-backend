@@ -4,7 +4,7 @@ const User = require('../models/user');
 const auth = require('../middleware/auth');
 
 //Signup API
-router.post('/users', async (req,res) => {
+router.post('/v1/users', async (req,res) => {
     const user = new User(req.body);
     try {
         await user.save();
@@ -16,7 +16,7 @@ router.post('/users', async (req,res) => {
 });
 
 //Login API
-router.post('/users/login', async(req, res) => {
+router.post('/v1/users/login', async(req, res) => {
     try {
         const user = await User.findByCredentials(req.body.username, req.body.password);
         const token = await user.generateAuthToken();
@@ -28,7 +28,7 @@ router.post('/users/login', async(req, res) => {
 });
 
 //API to get the data of all users
-router.get('/users', auth,async (req,res) => {
+router.get('/v1/users', auth,async (req,res) => {
     try {
         const users = await User.find({});
         res.send(users);
@@ -38,12 +38,12 @@ router.get('/users', auth,async (req,res) => {
 });
 
 //API to get user's profile
-router.get('/users/me', auth, async (req, res) => {
+router.get('/v1/users/me', auth, async (req, res) => {
     res.send(req.user);
 });
 
 //Logout API
-router.post('/users/logout', auth, async (req, res) => {
+router.post('/v1/users/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => {
             return token.token !== req.token;
@@ -57,7 +57,7 @@ router.post('/users/logout', auth, async (req, res) => {
 });
 
 //API to logout of all the sessions
-router.post('/users/logoutAll', auth, async (req, res) => {
+router.post('/v1/users/logoutAll', auth, async (req, res) => {
     try {
         req.user.tokens = [];
         await req.user.save();

@@ -4,7 +4,7 @@ const Event = require('../models/event');
 const auth = require('../middleware/auth');
 
 //API to post the events
-router.post('/events', auth, async (req, res) => {
+router.post('/v1/events', auth, async (req, res) => {
     console.log(req.body);
     const event = new Event(req.body);
     console.log(event);
@@ -17,7 +17,7 @@ router.post('/events', auth, async (req, res) => {
 });
 
 //API to read the events
-router.get('/events', auth, async (req,res) => {
+router.get('/v1/events', auth, async (req,res) => {
     try {
         const events = await Event.find({});
         res.send(events);
@@ -27,7 +27,7 @@ router.get('/events', auth, async (req,res) => {
 });
 
 //API to update the events
-router.patch('/events/:id', auth, async (req,res) => {
+router.patch('/v1/events/:id', auth, async (req,res) => {
     const allowedUpdates = ['name', 'city', 'company', 'date'];
     const updates = Object.keys(req.body);
     const valid = updates.every((update) => allowedUpdates.includes(update));
@@ -49,7 +49,7 @@ router.patch('/events/:id', auth, async (req,res) => {
 });
 
 //API to delete the events
-router.delete('/events/:id', auth, async (req,res) => {
+router.delete('/v1/events/:id', auth, async (req,res) => {
     try {
         const event = await Event.findOne({ _id: req.params.id });
         await event.remove();
