@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         }
+    }],
+    events: [{
+        event: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Event'
+        }
     }]
 });
 

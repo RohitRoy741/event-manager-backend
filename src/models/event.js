@@ -24,7 +24,13 @@ const Event = mongoose.model('event', {
                 throw new Error('Please enter a future event!');
             }
         }
-    }
+    },
+    attendees: [{
+        attendee: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    }]
 });
 
 module.exports = Event;
