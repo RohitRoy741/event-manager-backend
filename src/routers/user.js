@@ -73,38 +73,37 @@ router.post('/v1/rsvp/add/:id', auth, async(req, res) => {
     try {
         const user = req.user;
         const event = await Event.findById(req.params.id);
-        if(!user.events.includes(event._id)) {
+        let flag = false;
+        for(let e of user.events) {
+            if(e._id.toString() === event._id.toString()) {
+                flag = true;
+                break;
+            }
+        }
+        if(!flag) {
             user.events.push(event._id);
             await user.save();
-        }
-        if(!event.attendees.includes(user._id)) {
             event.attendees.push(user._id);
             await event.save();
+            res.send({user, event});
+        } else {
+            res.send({ message: 'Event already added'});
         }
-        res.send({user, event});
     }catch(e) {
         res.status(500).send({ error: e });
     }
 });
-
 //Remove RSVP API
 router.post('/v1/rsvp/remove/:id', auth, async(req, res) => {
     try {
         const user = req.user;
         const event = await Event.findById(req.params.id);
-        let flag = false;
-        for(let e of user.events) {
-            if(e._id.toString() === event._id.toString()) {
-                flag = true;
-            }
-        }
-        console.log(flag);
         user.events = user.events.filter((ev) => {
-            ev._id.toString() !== event._id.toString();
+            return ev._id.toString() !== event._id.toString();
         });
         await user.save();
         event.attendees = event.attendees.filter((us) => {
-            us._id.toString() !== user._id.toString();
+            return us._id.toString() !== user._id.toString();
         });
         await event.save();
         res.send({user, event});
